@@ -6,6 +6,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import {TaskStorage} from '../util/TaskStorage';
 import {TaskType} from './TaskInput';
+import {Colors} from '../configs/GlobalTheme';
 
 class Welcome extends Component<{
   theme: Partial<FullTheme>,
@@ -97,6 +98,9 @@ class Welcome extends Component<{
           />
           <Button
             title="直接查看"
+            containerStyle={{
+              // backgroundColor: Colors.red,
+            }}
             onPress={this.gotoReading}
           />
         </View>

@@ -5,7 +5,7 @@ import {Animated, AppState, AppStateStatus, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {FAB, FullTheme, Header, Icon, useTheme} from 'react-native-elements';
 import {Route, useRoute} from '@react-navigation/native';
-import TaskList from './TaskList';
+import TaskInput from './TaskInput';
 import {getBottomSpace} from 'react-native-iphone-x-helper';
 import {TaskStorage} from '../util/TaskStorage';
 
@@ -137,8 +137,7 @@ class Home extends Component<{
         <Header
           centerComponent={{text: this.renderHeaderTitle()}}
           containerStyle={{
-            borderBottomWidth: 1,
-            borderBottomColor: this.props.theme.colors?.black,
+            borderBottomWidth: 0,
           }}
         />
         <Animated.View
@@ -147,7 +146,7 @@ class Home extends Component<{
             display: this.state.ani.memoryDisplay ? 'flex' : 'none',
           }}
         >
-          <TaskList
+          <TaskInput
             disabled={this.state.status !== StatusEnum.Memorizing}
           />
         </Animated.View>
@@ -163,7 +162,7 @@ class Home extends Component<{
             width: '100%',
             backgroundColor: this.props.theme.colors?.primary,
           }}/>
-          <TaskList
+          <TaskInput
             disabled={this.state.status !== StatusEnum.Reading}
             onChange={(taskList, index) => {
               TaskStorage.set(taskList).catch(ignore => {});
@@ -184,7 +183,7 @@ class Home extends Component<{
           title="下一步"
           titleStyle={{color: this.props.theme.colors?.text}}
           containerStyle={{
-            // borderWidth: 0,
+            borderWidth: 0,
             display: this.state.status === StatusEnum.Reading ? 'none' : 'flex',
             backgroundColor: this.props.theme.colors?.primary,
             paddingVertical: 0,

@@ -111,7 +111,7 @@ export const GlobalTheme: { dark: Theme, light: Theme, current: string } = {
       ...DarkOutTheme.Button,
       containerStyle: {
         ...DarkOutTheme.Button?.containerStyle as {},
-        borderColor: Colors.white,
+        borderColor: Colors.greyLighter,
       },
       titleStyle: {
         color: Colors.white,

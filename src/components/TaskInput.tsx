@@ -1,12 +1,12 @@
 import React, {Component, RefObject} from 'react';
 import {FlatList, NativeSyntheticEvent, Text, TextInput, TextInputKeyPressEventData, View} from 'react-native';
-import {FullTheme} from 'react-native-elements';
+import {FullTheme, useTheme} from 'react-native-elements';
 
 export type TaskType = {
   text: string,
 }
 
-class TaskInput extends Component<{
+class TaskInputInner extends Component<{
   theme: Partial<FullTheme>,
   taskList?: TaskType[],
   disabled?: boolean,
@@ -94,9 +94,9 @@ class TaskInput extends Component<{
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              borderColor: this.props.theme.colors?.greyOutline,
+              borderColor: '#9994',
               borderTopWidth: info.index === 0 ? 0 : 1,
-              height: 40,
+              height: 43,
             }}
           >
             <Text
@@ -144,4 +144,11 @@ class TaskInput extends Component<{
   }
 }
 
-export default TaskInput;
+export default function TaskInput({disabled, taskList, onChange}: {
+  taskList?: TaskType[],
+  disabled?: boolean,
+  onChange?: (taskList: TaskType[], index: number) => void,
+}) {
+  const {theme} = useTheme();
+  return (<TaskInputInner disabled={disabled} theme={theme} taskList={taskList} onChange={onChange}/>);
+}
