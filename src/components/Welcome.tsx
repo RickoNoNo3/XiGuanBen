@@ -70,17 +70,17 @@ class Welcome extends Component<{
           opacity: this.state.ani.opacity,
         }}
       >
-        <Text
-          h3
+        <View
           style={{
             flex: 2,
-            textAlign: 'center',
-            textAlignVertical: 'bottom',
+            justifyContent: 'flex-end',
             paddingBottom: '20%',
           }}
         >
-          您当前有 {this.state.taskCnt} 个任务
-        </Text>
+          <Text h3 style={{textAlign: 'center'}}>
+            您当前有 {this.state.taskCnt} 个任务
+          </Text>
+        </View>
         <View
           style={{
             flex: 3,

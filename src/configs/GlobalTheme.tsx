@@ -7,6 +7,7 @@ declare module 'react-native-elements' {
     background: string;
     text: string;
     danger: string;
+    header: string;
   }
 }
 
@@ -67,6 +68,7 @@ export const GlobalTheme: { dark: Theme, light: Theme, current: string } = {
       danger: Colors.red,
       text: Colors.black,
       background: Colors.secondary,
+      header: Colors.primary,
       grey0: Colors.greyDarkest,
       grey1: Colors.greyDarker,
       grey2: Colors.grey,
@@ -96,6 +98,7 @@ export const GlobalTheme: { dark: Theme, light: Theme, current: string } = {
       danger: Colors.red,
       text: Colors.white,
       background: Colors.secondaryDark,
+      header: Colors.secondaryDark,
       grey0: Colors.greyDarkest,
       grey1: Colors.greyDarker,
       grey2: Colors.grey,

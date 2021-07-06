@@ -7,8 +7,8 @@ export const GetNavTheme = (theme: Partial<FullTheme>): Theme => ({
   colors: {
     text: theme.colors?.black ?? Colors.black,
     primary: theme.colors?.primary ?? Colors.primary,
-    background: theme.colors?.primary ?? Colors.primary,
-    border: theme.colors?.grey3 ?? Colors.grey,
+    background: theme.colors?.header ?? Colors.primary,
+    border: theme.colors?.black ?? Colors.black,
     card: theme.colors?.grey1 ?? Colors.greyLightest,
     notification: theme.colors?.black ?? Colors.black,
   },

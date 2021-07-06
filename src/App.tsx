@@ -1,5 +1,5 @@
 import React from 'react';
-import {Appearance, AppState, StatusBar, UIManager} from 'react-native';
+import {Appearance, AppState, AppStateStatus, StatusBar, UIManager} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {ThemeProvider, useTheme} from 'react-native-elements';
@@ -32,7 +32,7 @@ function MyNavigation() {
 }
 
 class App extends React.Component {
-  refreshTaskList = () => {
+  refreshTaskList = (state: AppStateStatus) => {
     TaskStorage.get().then(taskList => {
       GlobalStore.dispatch(TaskActions.SetTask(taskList));
     }).catch(ignore => {});
@@ -47,11 +47,13 @@ class App extends React.Component {
   }
 
   public componentDidMount(): void {
-    AppState.addEventListener('focus', this.refreshTaskList);
+    AppState.addEventListener('change', this.refreshTaskList);
   }
 
   public componentWillUnmount(): void {
-    AppState.removeEventListener('focus', this.refreshTaskList);
+    try {
+      AppState.removeEventListener('change', this.refreshTaskList);
+    } catch (ignore) {}
   }
 
   render() {

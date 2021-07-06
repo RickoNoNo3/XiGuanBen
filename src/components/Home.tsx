@@ -1,7 +1,7 @@
 // noinspection JSUnreachableSwitchBranches
 
 import React, {Component} from 'react';
-import {Animated, AppState, View} from 'react-native';
+import {Animated, AppState, AppStateStatus, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {FAB, FullTheme, Header, Icon, useTheme} from 'react-native-elements';
 import {Route, useRoute} from '@react-navigation/native';
@@ -36,8 +36,10 @@ class Home extends Component<{
     },
   };
 
-  onBlur = () => {
-    this.props.navigation.replace('Welcome');
+  onBlur = (state: AppStateStatus) => {
+    if (state === 'background' || state === 'inactive' || state === 'unknown') {
+      this.props.navigation.replace('Welcome');
+    }
   };
 
   public componentDidMount(): void {
@@ -52,12 +54,12 @@ class Home extends Component<{
         status: StatusEnum.Reading,
       });
     }
-    AppState.addEventListener('blur', this.onBlur);
+    AppState.addEventListener('change', this.onBlur);
   }
 
   public componentWillUnmount(): void {
     try {
-      AppState.removeEventListener('blur', this.onBlur);
+      AppState.removeEventListener('change', this.onBlur);
     } catch (ignore) {}
   }
 
@@ -135,7 +137,8 @@ class Home extends Component<{
         <Header
           centerComponent={{text: this.renderHeaderTitle()}}
           containerStyle={{
-            borderBottomWidth: 0,
+            borderBottomWidth: 1,
+            borderBottomColor: this.props.theme.colors?.black,
           }}
         />
         <Animated.View
@@ -172,7 +175,7 @@ class Home extends Component<{
           style={{
             display: this.state.status === StatusEnum.Reading ? 'none' : 'flex',
             position: 'absolute',
-            bottom: 15,
+            bottom: getBottomSpace() + 12,
             right: 15,
           }}
           useForeground={true}
@@ -181,7 +184,7 @@ class Home extends Component<{
           title="下一步"
           titleStyle={{color: this.props.theme.colors?.text}}
           containerStyle={{
-            borderWidth: 0,
+            // borderWidth: 0,
             display: this.state.status === StatusEnum.Reading ? 'none' : 'flex',
             backgroundColor: this.props.theme.colors?.primary,
             paddingVertical: 0,
