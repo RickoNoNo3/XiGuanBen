@@ -13,8 +13,8 @@ declare module 'react-native-elements' {
 export const Colors = {
   primary: '#CCC330',
   secondary: '#E3E3FF',
-  primaryDark: '#626000',
-  secondaryDark: '#233233',
+  primaryDark: '#4F4000',
+  secondaryDark: '#222',
   white: '#FFF',
   black: '#000',
   grey: '#888',
