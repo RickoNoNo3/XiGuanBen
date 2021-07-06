@@ -11,7 +11,7 @@ declare module 'react-native-elements' {
 }
 
 export const Colors = {
-  primary: '#BBB330',
+  primary: '#CCC330',
   secondary: '#E3E3FF',
   primaryDark: '#626000',
   secondaryDark: '#233233',
@@ -31,13 +31,12 @@ const DarkOutTheme: Theme = {
     type: 'solid',
     buttonStyle: {
       backgroundColor: 'transparent',
+      marginVertical: 0,
+      marginHorizontal: 5,
     },
     containerStyle: {
       backgroundColor: 'transparent',
       borderWidth: 1,
-      borderColor: Colors.white,
-      paddingVertical: 5,
-      paddingHorizontal: 10,
       borderRadius: 100,
     },
   },
@@ -46,17 +45,18 @@ const DarkOutTheme: Theme = {
       style: {
         fontSize: 17,
         fontWeight: 'bold',
-      }
-    }
+      },
+    },
   },
   Text: {
     style: {
       fontSize: 15,
-    }
+    },
   },
 };
 
-export const GlobalTheme: { dark: Theme, light: Theme } = {
+export const GlobalTheme: { dark: Theme, light: Theme, current: string } = {
+  current: 'light',
   light: {
     ...DarkOutTheme,
     colors: {
@@ -74,6 +74,16 @@ export const GlobalTheme: { dark: Theme, light: Theme } = {
       grey4: Colors.greyLightest,
       grey5: Colors.white,
       greyOutline: Colors.grey,
+    },
+    Button: {
+      ...DarkOutTheme.Button,
+      containerStyle: {
+        ...DarkOutTheme.Button?.containerStyle as {},
+        borderColor: Colors.black,
+      },
+      titleStyle: {
+        color: Colors.black,
+      },
     },
   },
   dark: {
@@ -93,6 +103,16 @@ export const GlobalTheme: { dark: Theme, light: Theme } = {
       grey4: Colors.greyLightest,
       grey5: Colors.white,
       greyOutline: Colors.grey,
+    },
+    Button: {
+      ...DarkOutTheme.Button,
+      containerStyle: {
+        ...DarkOutTheme.Button?.containerStyle as {},
+        borderColor: Colors.white,
+      },
+      titleStyle: {
+        color: Colors.white,
+      },
     },
   },
 };

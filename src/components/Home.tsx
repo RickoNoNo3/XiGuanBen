@@ -5,8 +5,9 @@ import {Animated, AppState, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {FAB, FullTheme, Header, Icon, useTheme} from 'react-native-elements';
 import {Route, useRoute} from '@react-navigation/native';
-import Memorizing from './Memorizing';
+import TaskList from './TaskList';
 import {getBottomSpace} from 'react-native-iphone-x-helper';
+import {TaskStorage} from '../util/TaskStorage';
 
 enum StatusEnum {
   Memorizing,
@@ -35,15 +36,29 @@ class Home extends Component<{
     },
   };
 
+  onBlur = () => {
+    this.props.navigation.replace('Welcome');
+  };
+
   public componentDidMount(): void {
     if (this.props.route.params?.directly) {
+      const newState = {...this.state};
+      newState.ani.memoryDisplay = false;
+      newState.ani.dividerDisplay = false;
+      newState.ani.checkingDisplay = true;
+      newState.ani.checkingFlex.setValue(1);
       this.setState({
+        ...newState,
         status: StatusEnum.Reading,
       });
     }
-    AppState.addEventListener('blur', () => {
-      this.props.navigation.replace('Welcome');
-    });
+    AppState.addEventListener('blur', this.onBlur);
+  }
+
+  public componentWillUnmount(): void {
+    try {
+      AppState.removeEventListener('blur', this.onBlur);
+    } catch (ignore) {}
   }
 
   next = () => {
@@ -71,7 +86,7 @@ class Home extends Component<{
         Animated.parallel([
           Animated.timing(this.state.ani.memoryFlex, {
             useNativeDriver: false,
-            toValue: 1,
+            toValue: 0,
             duration: 200,
           }),
           Animated.timing(this.state.ani.dividerHeight, {
@@ -129,7 +144,9 @@ class Home extends Component<{
             display: this.state.ani.memoryDisplay ? 'flex' : 'none',
           }}
         >
-          <Memorizing disabled={this.state.status !== StatusEnum.Memorizing}/>
+          <TaskList
+            disabled={this.state.status !== StatusEnum.Memorizing}
+          />
         </Animated.View>
         <Animated.View
           style={{
@@ -143,7 +160,13 @@ class Home extends Component<{
             width: '100%',
             backgroundColor: this.props.theme.colors?.primary,
           }}/>
-          <Memorizing disabled={this.state.status !== StatusEnum.Reading}/>
+          <TaskList
+            disabled={this.state.status !== StatusEnum.Reading}
+            onChange={(taskList, index) => {
+              TaskStorage.set(taskList).catch(ignore => {});
+            }}
+            taskList={this.props.route.params?.taskList}
+          />
         </Animated.View>
         <FAB
           style={{

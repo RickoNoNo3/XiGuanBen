@@ -2,16 +2,17 @@ import React, {Component, RefObject} from 'react';
 import {FlatList, NativeSyntheticEvent, Text, TextInput, TextInputKeyPressEventData, View} from 'react-native';
 import {FullTheme} from 'react-native-elements';
 
-type TaskType = {
+export type TaskType = {
   text: string,
 }
 
 class TaskInput extends Component<{
-  theme: Partial<FullTheme>
-  taskList?: TaskType[]
-  disabled?: boolean
+  theme: Partial<FullTheme>,
+  taskList?: TaskType[],
+  disabled?: boolean,
+  onChange?: (taskList: TaskType[], index: number) => void,
 }, {
-  taskList: TaskType[]
+  taskList: TaskType[],
 }> {
   inputRef: RefObject<TextInput>[] = [React.createRef<TextInput>()];
 
@@ -33,7 +34,6 @@ class TaskInput extends Component<{
 
   handleKeyPressCreator = (index: number): ((e: NativeSyntheticEvent<TextInputKeyPressEventData>) => void) => {
     return (e) => {
-      console.log(e.nativeEvent.key);
       if (e.nativeEvent.key !== 'Backspace') return;
       if (index === 0) return;
       if (this.state.taskList[index].text !== '') return;
@@ -44,6 +44,9 @@ class TaskInput extends Component<{
         taskList,
       }, () => {
         this.inputRef[index - 1].current?.focus();
+        if (this.props.onChange) {
+          this.props.onChange(taskList, index);
+        }
       });
     };
   };
@@ -57,6 +60,9 @@ class TaskInput extends Component<{
         taskList,
       }, () => {
         this.inputRef[index + 1].current?.focus();
+        if (this.props.onChange) {
+          this.props.onChange(taskList, index);
+        }
       });
     };
   };
@@ -67,6 +73,10 @@ class TaskInput extends Component<{
       taskList[index] = {text};
       this.setState({
         taskList,
+      }, () => {
+        if (this.props.onChange) {
+          this.props.onChange(taskList, index);
+        }
       });
     };
   };

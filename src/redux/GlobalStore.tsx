@@ -1,6 +1,6 @@
 import {combineReducers, createStore} from 'redux';
-import {AppReducer} from './reducers/AppReducer';
+import {TaskReducer} from './reducers/TaskReducer';
 
 export const GlobalStore = createStore(combineReducers({
-  app: AppReducer,
+  task: TaskReducer,
 }));

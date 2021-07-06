@@ -1,56 +1,73 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {Animated, View} from 'react-native';
 import {Button, FullTheme, Text, useTheme} from 'react-native-elements';
 import {getBottomSpace, getStatusBarHeight} from 'react-native-iphone-x-helper';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
-import {GlobalStore} from '../redux/GlobalStore';
+import {TaskStorage} from '../util/TaskStorage';
+import {TaskType} from './TaskInput';
 
 class Welcome extends Component<{
   theme: Partial<FullTheme>,
   navigation: StackNavigationProp<any>,
 }, {
   taskCnt: number,
+  taskList?: TaskType[],
 }> {
   state = {
     taskCnt: 0,
+    taskList: [] as TaskType[],
+    ani: {
+      opacity: new Animated.Value(0),
+    },
   };
 
   public componentDidMount(): void {
-    const taskCnt = 2;
-    if (taskCnt) {
-      this.setState({
-        taskCnt,
-      });
-    } else {
-      this.gotoReading();
-    }
+    setTimeout(() => {
+      TaskStorage.get().then(taskList => {
+        const taskCnt = (taskList ?? []).length;
+        this.setState({
+          taskCnt,
+          taskList,
+        }, () => {
+          if (taskCnt <= 0) {
+            this.gotoReading();
+          } else {
+            Animated.timing(this.state.ani.opacity, {
+              useNativeDriver: false,
+              toValue: 1,
+              duration: 200,
+            }).start();
+          }
+        });
+      }).catch(ignore => {});
+    }, 600);
   }
 
   gotoMemorizing = () => {
     this.props.navigation.replace('Home', {
       directly: false,
       taskCnt: this.state.taskCnt,
+      taskList: this.state.taskList,
     });
   };
 
   gotoReading = () => {
     this.props.navigation.replace('Home', {
       directly: true,
+      taskList: this.state.taskList,
     });
   };
 
   render() {
-    if (this.state.taskCnt <= 0) {
-      return null;
-    }
     return (
-      <View
+      <Animated.View
         style={{
           flex: 1,
           backgroundColor: this.props.theme.colors?.primary,
           paddingTop: getStatusBarHeight(),
           paddingBottom: getBottomSpace(),
+          opacity: this.state.ani.opacity,
         }}
       >
         <Text
@@ -73,7 +90,7 @@ class Welcome extends Component<{
           <Button
             title="回忆任务"
             containerStyle={{
-              marginBottom: 10,
+              marginBottom: 20,
               backgroundColor: this.props.theme.colors?.secondary,
             }}
             onPress={this.gotoMemorizing}
@@ -83,7 +100,7 @@ class Welcome extends Component<{
             onPress={this.gotoReading}
           />
         </View>
-      </View>
+      </Animated.View>
     );
   }
 }
